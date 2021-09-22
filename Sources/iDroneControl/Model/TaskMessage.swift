@@ -17,7 +17,6 @@ final class TaskMessage: CoatyObject{
     
     // MARK: - Properties.
     
-    /// Determines whether the light is currently defect. The default value is `false`.
     var droneId: String
     var taskId: String
     var state: TaskState
