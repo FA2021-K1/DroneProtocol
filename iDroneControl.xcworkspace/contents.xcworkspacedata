@@ -2,13 +2,13 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "container:iDroneControl.xcodeproj">
+      location = "container:/Users/fa21/Desktop/DroneProtocol/DroneProtocol.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Podfile">
    </FileRef>
    <FileRef
-      location = "group:iDroneControl.xcodeproj">
+      location = "group:/Users/fa21/Desktop/DroneProtocol/DroneProtocol.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
