@@ -18,16 +18,19 @@ final class TaskMessage: CoatyObject{
     // MARK: - Properties.
     
     /// Determines whether the light is currently defect. The default value is `false`.
+    var droneId: String
+    var taskId: String
     var state: TaskState
-    var id: UUID
-    var time: 
+    var timestamp: TimeInterval
     
     
     // MARK: - Initializers.
     
-    init(id: UUID, state: TaskState) {
+    init(droneId: String, taskId: String, state: TaskState) {
+        self.droneId = droneId
+        self.taskId = taskId
         self.state = state
-        self.id = id
+        self.timestamp = TimeUtil.getCurrentTime()
         super.init(coreType: .CoatyObject,
                    objectType: TaskMessage.objectType,
                    objectId: .init(),
@@ -45,21 +48,27 @@ final class TaskMessage: CoatyObject{
     }
     
     enum CodingKeys: String, CodingKey{
+        case droneId
+        case taskId
         case state
-        case id
+        case timestamp
     }
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.droneId = try container.decode(String.self, forKey: .droneId)
+        self.taskId = try container.decode(String.self, forKey: .taskId)
         self.state = try container.decode(TaskState.self, forKey: .state)
-        self.id = try container.decode(UUID.self, forKey: .id)
+        self.timestamp = try container.decode(TimeInterval.self, forKey: .timestamp)
         try super.init(from: decoder)
     }
     
     override func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(droneId, forKey: .droneId)
+        try container.encode(taskId, forKey: .taskId)
         try container.encode(state, forKey: .state)
-        try container.encode(id, forKey: .id)
+        try container.encode(timestamp, forKey: .timestamp)
     }
 }
