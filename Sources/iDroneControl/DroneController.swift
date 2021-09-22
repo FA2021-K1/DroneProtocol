@@ -12,13 +12,7 @@ import RxSwift
 /// A Coaty controller that invokes remote operations to control lights.
 class DroneController: Controller {
     
-    enum TaskUpdateResult{
-        case SUCCESS
-        case ALREADY_TAKEN
-        case TASK_DISMISSED
-    }
-    
-    func taskStateUpdate(droneId: String, taskId: String, state: TaskMessage.TaskState) -> TaskUpdateResult {
+    func taskStateUpdate(droneId: String, taskId: String, state: TaskMessage.TaskState) {
         let taskMessage = TaskMessage(droneId: droneId, taskId: taskId, state: state)
         
         // Create the event.
@@ -28,7 +22,13 @@ class DroneController: Controller {
         self.communicationManager.publishAdvertise(event)
     }
     
-    func retrieveAvailableTasks(){
+    func retrieveAvailableTasks() {
+        let query = QueryEvent.with(objectTypes: [AvailableResponse.objectType])
         
+        self.communicationManager.publishQuery(query)
+            .subscribe(onNext: { (resolveEvent) in
+            // TODO
+        })
+        .disposed(by: self.disposeBag)
     }
 }

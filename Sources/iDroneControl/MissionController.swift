@@ -13,6 +13,20 @@ import RxSwift
 /// A Coaty controller that invokes remote operations to control lights.
 class MissionController: Controller {
     
+    init() {
+        self.communicationManager
+            .observeQuery()
+            .filter({ query in
+                query.data.objectTypes?.contains(AvailableResponse.objectType)
+            })
+            .subscribe({ query in
+                // TODO: Get tasks
+                let response = AvailableResponse()
+            
+            })
+            .disposed(by: self.disposeBag)
+    }
+    
     func publishMissionTimeout(retry: Bool = true){
         
     }

@@ -6,3 +6,14 @@
 //
 
 import Foundation
+import CoatySwift
+
+final class AvailableResponse: CoatyObject{
+    
+    // MARK: - Class registration.
+    override class var objectType: String {
+        return register(objectType: "idrone.sync.availables", with: self)
+    }
+
+    
+}
