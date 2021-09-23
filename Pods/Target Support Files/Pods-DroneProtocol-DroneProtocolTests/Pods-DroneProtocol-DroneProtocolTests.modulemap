@@ -1,0 +1,6 @@
+framework module Pods_DroneProtocol_DroneProtocolTests {
+  umbrella header "Pods-DroneProtocol-DroneProtocolTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
