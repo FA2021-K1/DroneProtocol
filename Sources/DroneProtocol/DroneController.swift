@@ -23,7 +23,7 @@ class DroneController: Controller {
     }
     
     func retrieveAvailableTasks() {
-        let query = QueryEvent.with(objectTypes: [TaskControlResponse.objectType])
+        let query = QueryEvent.with(objectTypes: [AvailableResponse.objectType])
         
         self.communicationManager.publishQuery(query)
             .subscribe(onNext: { (resolveEvent) in
@@ -32,3 +32,4 @@ class DroneController: Controller {
         .disposed(by: self.disposeBag)
     }
 }
+

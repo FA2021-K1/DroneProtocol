@@ -13,31 +13,68 @@ import RxSwift
 /// A Coaty controller that invokes remote operations to control lights.
 class MissionController: Controller {
     
-    override func onInit() {
-        super.onInit()
-        
-        try! self.communicationManager
+    init() {
+        self.communicationManager
             .observeQuery()
             .filter({ query in
-                let types = query.data.objectTypes ?? []
-                return types.contains(TaskControlResponse.objectType)
-            }).subscribe({ event in
-                let response = TaskControlResponse()
-                let retrieveEvent = RetrieveEvent.with(objects: [response])
-                event.element?.retrieve(retrieveEvent: retrieveEvent)
+                query.data.objectTypes?.contains(AvailableResponse.objectType)
+            })
+            .subscribe({ query in
+                // TODO: Get tasks
+                let response = AvailableResponse()
+            
             })
             .disposed(by: self.disposeBag)
     }
     
-    func publishForcedMissionEnd(droneId: String, taskId: String, retry: Bool = true){
-        let taskMessage = TaskMessage(droneId: droneId, taskId: taskId, state: retry ? TaskMessage.TaskState.renew : TaskMessage.TaskState.dismissed)
+    func publishMissionTimeout(retry: Bool = true){
         
-        // Create the event.
-        let event = try! AdvertiseEvent.with(object: taskMessage)
+    }
+    
+    func postNewMission(){
+        
+    }
+    
+    func observeResultDataEvent(){
+        
+    }
+    
+    func switchLights(contextFilter: ContextFilter,
+                      onOff: Bool,
+                      luminosity: Double,
+                      rgba: ColorRGBA,
+                      switchTime: Int) {
+        // Cancel any pending response of the previous switchLights invocation
+        // by unsubscribing from the Call event.
+        self.disposeBag = DisposeBag()
+        
+        let parameters: [String: AnyCodable] = ["on": .init(onOff),
+                                                "color": .init(rgba),
+                                                "luminosity": .init(luminosity),
+                                                "switchTime": .init(switchTime)]
+        
+        let switchLightOperation = SwitchLightOperations.lightControlOperation.rawValue
+        let callEvent = try! CallEvent.with(operation: switchLightOperation,
+                                            parameters: parameters,
+                                            filter: contextFilter)
+        
+        logConsole(source: self.registeredName,
+                   message: "lightSwitchOperation called with params \(PayloadCoder.encode(parameters))",
+                   eventName: "Call",
+                   eventDirection: .Out)
+        
+        self.communicationManager
+            .publishCall(callEvent)
+            .subscribe(onNext: { returnEvent in
+                if let result = returnEvent.data.result {
+                    logConsole(source: self.registeredName, message: "lightSwitchOperation returned: \(result)", eventName: "Return", eventDirection: .In)
+                }
+                
+                if let error = returnEvent.data.error {
+                    logConsole(source: self.registeredName, message: "lightSwitchOperation errored: \(error)", eventName: "Return", eventDirection: .In)
 
-        // Publish the event by the communication manager.
-        self.communicationManager.publishAdvertise(event)
-
+                }
+        }).disposed(by: disposeBag)
     }
 }
 

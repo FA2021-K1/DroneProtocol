@@ -1,6 +1,0 @@
-framework module Pods_DroneProtocol {
-  umbrella header "Pods-DroneProtocol-umbrella.h"
-
-  export *
-  module * { export * }
-}
