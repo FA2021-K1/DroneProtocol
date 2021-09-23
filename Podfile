@@ -6,7 +6,7 @@ target 'DroneProtocol' do
   use_frameworks!
 
   # Pods for DroneProtocol
-   pod 'CoatySwift', '~> 2.0'
+   #pod 'CoatySwift', '~> 2.0'
 
   target 'DroneProtocolTests' do
     # Pods for testing
